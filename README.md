@@ -1,4 +1,6 @@
 # QUIZ App using ReactJS (Code with Sloba)
+Consiste en el desarrollo de un cuestionario con multiple choice, al finalizar muestra el score alcanzado.
+Se trabaja con estados locales en React.
 
 ## Inizialitation
 
@@ -8,4 +10,4 @@
 - 4- npm i 
 - 5- npm run dev
 
-# Quiz-App-REACTjs
+## Para publicar
