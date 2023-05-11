@@ -1,5 +1,6 @@
-import Quiz from "./Quiz";
+import Quiz from "../src/components/Quiz/Quiz";
 import { jsQuizz } from "./constants";
+
 function App() {
   return <Quiz questions={jsQuizz.questions} />;
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { resultInitialState } from "./constants";
+import { resultInitialState } from "../../constants";
+import "./Quiz.scss";
+import AnswerTimer from "../AnswerTimer/AnswerTimer";
 
 const Quiz = ({ questions }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -7,8 +9,9 @@ const Quiz = ({ questions }) => {
   const [answer, setAnswer] = useState(null);
   const [result, setResult] = useState(resultInitialState);
   const [showResult, setShowResult] = useState(false);
+  const [showAnswerTimer, setShowAnswerTimer] = useState(true);
 
-  const { question, choices, correctAnswer } = questions[currentQuestion];
+  const { question, choices, correctAnswer, type } = questions[currentQuestion];
 
   const onAnswerClick = (answer, index) => {
     setAnswerIdx(index);
@@ -19,10 +22,11 @@ const Quiz = ({ questions }) => {
     }
   };
 
-  const onClickNext = () => {
+  const onClickNext = (finalAnswer) => {
     setAnswerIdx(null);
+    setShowAnswerTimer(false);
     setResult((prev) =>
-      answer
+      finalAnswer
         ? {
             ...prev,
             score: prev.score + 5,
@@ -41,33 +45,57 @@ const Quiz = ({ questions }) => {
       setShowResult(true);
     }
   };
+  setTimeout(() => {
+    setShowAnswerTimer(true);
+  });
 
   const onTryAgain = () => {
     setResult(resultInitialState);
     setShowResult(false);
   };
 
+  const handleTimeUp = () => {
+    setAnswer(false);
+    onClickNext(false);
+  };
+
+  const getAnswerUI = () => {
+    if (type === "FIB") {
+      return <input />;
+    }
+    return (
+      <ul>
+        {choices.map((answer, index) => (
+          <li
+            onClick={() => onAnswerClick(answer, index)}
+            key={answer}
+            className={answerIdx === index ? "selected-answer" : null}
+          >
+            {answer}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className="quiz-container">
       {!showResult ? (
         <>
+          {showAnswerTimer && (
+            <AnswerTimer duration={5} onTimeUp={handleTimeUp} />
+          )}
           <p>{answer}</p>
           <span className="active-question-no">{currentQuestion + 1}</span>
           <span className="total-question">/{questions.length}</span>
           <h2>{question}</h2>
-          <ul>
-            {choices.map((answer, index) => (
-              <li
-                onClick={() => onAnswerClick(answer, index)}
-                key={answer}
-                className={answerIdx === index ? "selected-answer" : null}
-              >
-                {answer}
-              </li>
-            ))}
-          </ul>
+          {getAnswerUI()}
+
           <div className="footer">
-            <button onClick={onClickNext} disabled={answerIdx === null}>
+            <button
+              onClick={() => onClickNext(answer)}
+              disabled={answerIdx === null}
+            >
               {currentQuestion === questions.length - 1 ? "Finish" : "Next"}
             </button>
           </div>
