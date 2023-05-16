@@ -3,12 +3,25 @@
 Consiste en el desarrollo de un cuestionario con multiple choice, al finalizar muestra el score alcanzado.
 Se trabaja con estados locales en React.
 
-## Inizialitation
+## Descripción
 
+Se muestra cada pregunta del cuestionario en una tarjeta con las posibles respuestas.
+Mientras tanto, corre el tiempo determinado para cada una que es de 10 segundos, se muestra una franja de color en la parte superior de la tarjeta que cambia de color indicando el avance del reloj.
+Al seleccionar una respuesta, se puede presionar el botón NEXT para continuar respondiendo el cuestionario.
+Al finalizar, se muestra el resultado con una tabla de Ranking, para distintos participantes del cuestionario.
+Este ranking se almacena sólo en un estado local, por lo tanto, al recargar la página se volverá todo a cero.
+
+
+## Instalando dependencias
+La app se ha creado usando el siguiente comando:
 - 1- npm create vite@latest Quiz-App-REACTjs -- --template react
+
+Luego, se instalaron dependencias:
 - 2- cd Quiz-App-REACTjs
 - 3- npm add -D sass
 - 4- npm i
+
+Levantando la aplicación:
 - 5- npm run dev
 
 ## DB para el cuestionario
