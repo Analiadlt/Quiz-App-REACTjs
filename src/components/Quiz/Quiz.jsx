@@ -2,6 +2,7 @@ import { useState } from "react";
 import { resultInitialState } from "../../constants";
 import "./Quiz.scss";
 import AnswerTimer from "../AnswerTimer/AnswerTimer";
+import Result from "../Result/Result";
 
 const Quiz = ({ questions }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -10,6 +11,7 @@ const Quiz = ({ questions }) => {
   const [result, setResult] = useState(resultInitialState);
   const [showResult, setShowResult] = useState(false);
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
+  const [inputAnswer, setInputAnswer] = useState("");
 
   const { question, choices, correctAnswer, type } = questions[currentQuestion];
 
@@ -25,6 +27,7 @@ const Quiz = ({ questions }) => {
   const onClickNext = (finalAnswer) => {
     setAnswerIdx(null);
     setShowAnswerTimer(false);
+    setInputAnswer('');
     setResult((prev) =>
       finalAnswer
         ? {
@@ -59,9 +62,19 @@ const Quiz = ({ questions }) => {
     onClickNext(false);
   };
 
+  const handleInputChange = (evt) => {
+    setInputAnswer(evt.target.value);
+
+    if (evt.target.value === correctAnswer) {
+      setAnswer(true);
+    } else {
+      setAnswer(false);
+    }
+  };
+
   const getAnswerUI = () => {
     if (type === "FIB") {
-      return <input />;
+      return <input value={inputAnswer} onChange={handleInputChange} />;
     }
     return (
       <ul>
@@ -83,7 +96,7 @@ const Quiz = ({ questions }) => {
       {!showResult ? (
         <>
           {showAnswerTimer && (
-            <AnswerTimer duration={5} onTimeUp={handleTimeUp} />
+            <AnswerTimer duration={10} onTimeUp={handleTimeUp} />
           )}
           <p>{answer}</p>
           <span className="active-question-no">{currentQuestion + 1}</span>
@@ -94,29 +107,18 @@ const Quiz = ({ questions }) => {
           <div className="footer">
             <button
               onClick={() => onClickNext(answer)}
-              disabled={answerIdx === null}
+              disabled={answerIdx === null && !inputAnswer} //deshabilita el button Next mientras no haya respuesta.
             >
               {currentQuestion === questions.length - 1 ? "Finish" : "Next"}
             </button>
           </div>
         </>
       ) : (
-        <div className="result">
-          <h3>Result</h3>
-          <p>
-            Total Questions: <span>{questions.length}</span>
-          </p>
-          <p>
-            Total Score: <span>{result.score}</span>
-          </p>
-          <p>
-            Correct Answers: <span>{result.correctAnswers}</span>
-          </p>
-          <p>
-            Wrong Answers: <span>{result.wrongAnswers}</span>
-          </p>
-          <button onClick={onTryAgain}>Try again</button>
-        </div>
+        <Result
+          result={result}
+          onTryAgain={onTryAgain}
+          totalQuestions={questions.length}
+        />
       )}
     </div>
   );

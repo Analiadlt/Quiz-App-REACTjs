@@ -17,12 +17,12 @@ function AnswerTimer({ duration, onTimeUp }) {
   useEffect(() => {
     setProgressLoaded(100 * (counter / duration));
 
-    if (counter === duration) {
+    if (counter >= duration) {
       clearInterval(intervalRef.current);
 
       setTimeout(() => {
         onTimeUp();
-      }, 1000);
+      }, 100000);
     }
   }, [counter]);
 
@@ -41,7 +41,7 @@ function AnswerTimer({ duration, onTimeUp }) {
         }}
         className="progress"
       >
-        {counter}
+        {/* {counter} */}
       </div>
     </div>
   );
